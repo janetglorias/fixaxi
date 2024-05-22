@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "611000807309",
+    "project_id": "fixaxi",
+    "storage_bucket": "fixaxi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611000807309:android:9f5bdc088d75c2053417c4",
+        "android_client_info": {
+          "package_name": "com.example.fixaxi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl0GohI-X9C8wFg08eVFchymE1z3ig91o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

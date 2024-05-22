@@ -1,6 +1,5 @@
-import 'package:fixaxi/pages/login/login.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fixaxi/constants/colors.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -51,11 +50,11 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),
-                        SizedBox(width: 40,),
+                        const SizedBox(width: 40,),
                         Container(
                           height: screenHeight * 0.22,
                           width: screenHeight * 0.22,
@@ -63,13 +62,13 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     //Row TWo
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,11 +80,11 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),
-                        SizedBox(width: 40,),
+                        const SizedBox(width: 40,),
                         Container(
                           height: screenHeight * 0.22,
                           width: screenHeight * 0.22,
@@ -93,13 +92,13 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -110,11 +109,11 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),
-                        SizedBox(width: 40,),
+                        const SizedBox(width: 40,),
                         Container(
                           height: screenHeight * 0.22,
                           width: screenHeight * 0.22,
@@ -122,7 +121,7 @@ class DashboardPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             color: AppColors.blue0,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text("Testing"),
                           ),
                         ),

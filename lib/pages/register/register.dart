@@ -5,8 +5,6 @@ import 'package:fixaxi/constants/colors.dart';
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
 
-  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -212,11 +210,11 @@ class SignUpPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Already a member?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(
