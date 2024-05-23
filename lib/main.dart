@@ -1,4 +1,7 @@
+import 'package:fixaxi/pages/damagehistory/damagehistory.dart';
+import 'package:fixaxi/pages/damagereport/damagereport.dart';
 import 'package:fixaxi/pages/dashboard/dashboard.dart';
+import 'package:fixaxi/pages/profile/profile.dart';
 import 'package:fixaxi/pages/register/register.dart';
 import 'package:fixaxi/pages/splashscreen/splashscreen.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
         '/signIn':(context) => SignInPage(),
         '/signUp':(context) => SignUpPage(),
         '/dashboard':(context) => const DashboardPage(),
+        '/profile':(context) => const ProfilePage(),
+        '/damagereport':(context) => const DamageReport(),
+        '/damagehistory':(context) => const DamageHistory(),
       },
     );
   }

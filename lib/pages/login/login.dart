@@ -156,7 +156,7 @@ class _SignInPageState extends State<SignInPage> {
       ),
       child: const Center(
         child: Text(
-          "Sign in",
+          "Sign In",
           style: TextStyle(
               color: Colors.white,
               fontSize: 16,

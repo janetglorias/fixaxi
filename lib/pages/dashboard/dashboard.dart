@@ -1,3 +1,6 @@
+import 'package:fixaxi/pages/damagehistory/damagehistory.dart';
+import 'package:fixaxi/pages/damagereport/damagereport.dart';
+import 'package:fixaxi/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fixaxi/constants/colors.dart';
@@ -7,12 +10,11 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-                // image: DecorationImage(image: AssetImage('assets/LoginPageBG.jpg'), fit: BoxFit.cover)
                 color: AppColors.blue4,
               ),
         width: screenWidth,
@@ -21,11 +23,9 @@ class DashboardPage extends StatelessWidget {
             Container(
               height: screenHeight * 0.25,
               decoration: const BoxDecoration(
-                // image: DecorationImage(image: AssetImage('assets/LoginPageBG.jpg'), fit: BoxFit.cover)
                 color: AppColors.blue4,
               ),
             ),
-            //Main Dashboard Content
             Center(
               child: Container(
               width: screenWidth,
@@ -43,86 +43,69 @@ class DashboardPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DamageReport()),
+                            );
+                          },
+                          child: Container(
+                            height: screenHeight * 0.22,
+                            width: screenHeight * 0.22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: AppColors.blue0,
+                            ),
+                            child: const Center(
+                              child: Text("Report Damages", style: TextStyle(color: Colors.white),),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 40,),
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DamageHistory()),
+                            );
+                          },
+                          child: Container(
+                            height: screenHeight * 0.22,
+                            width: screenHeight * 0.22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: AppColors.blue0,
+                            ),
+                            child: const Center(
+                              child: Text("Damage History", style: TextStyle(color: Colors.white),),
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20,),
-                    //Row TWo
+                    //Row Two
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
-                          ),
-                        ),
-                        const SizedBox(width: 40,),
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
-                          ),
-                        ),
-                        const SizedBox(width: 40,),
-                        Container(
-                          height: screenHeight * 0.22,
-                          width: screenHeight * 0.22,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppColors.blue0,
-                          ),
-                          child: const Center(
-                            child: Text("Testing"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ProfilePage()),
+                            );
+                          },
+                          child: Container(
+                            height: screenHeight * 0.22,
+                            width: screenHeight * 0.22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: AppColors.blue0,
+                            ),
+                            child: const Center(
+                              child: Text("My Profile",style: TextStyle(color: Colors.white),),
+                            ),
                           ),
                         ),
                       ],
