@@ -16,7 +16,7 @@ class DashboardPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While waiting for the authentication state, display a loading indicator
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -34,7 +34,7 @@ class DashboardPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login');
                   },
-                  child: Text('Sign in'),
+                  child: const Text('Sign in'),
                 ),
               ),
             );
