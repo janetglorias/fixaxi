@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart'; // Import DateFormat
+import 'package:intl/intl.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -24,11 +24,66 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User? currentUser = FirebaseAuth.instance.currentUser;
-    DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(currentUser!.uid);
+
+    if (currentUser == null) {
+      // Handle the case where the user is not authenticated
+      return const Center(
+        child: Text('Please sign in to view profile'),
+      );
+    }
+
+    DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile Page'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Reset password functionality
+              if (currentUser.email != null) {
+                FirebaseAuth.instance.sendPasswordResetEmail(email: currentUser.email!);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Password Reset'),
+                      content: const Text('Password reset email sent successfully.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Error'),
+                      content: const Text('No email address associated with this account.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            icon: const Icon(Icons.lock),
+            tooltip: 'Reset Password',
+          ),
+        ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: userDoc.snapshots(),
