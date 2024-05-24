@@ -1,22 +1,58 @@
-import 'package:fixaxi/pages/damagehistory/damagehistory.dart';
-import 'package:fixaxi/pages/damagereport/damagereport.dart';
-import 'package:fixaxi/pages/profile/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fixaxi/constants/colors.dart';
+import 'package:fixaxi/pages/damagehistory/damagehistory.dart';
+import 'package:fixaxi/pages/damagereport/damagereport.dart';
+import 'package:fixaxi/pages/profile/profile.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While waiting for the authentication state, display a loading indicator
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          if (snapshot.hasData && snapshot.data != null) {
+            // User is logged in, show the dashboard
+            return _buildDashboard(context);
+          } else {
+            // User is not logged in, navigate to the login page
+            // You can replace `LoginPage()` with your actual login page
+            return Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  child: Text('Sign in'),
+                ),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+
+  Widget _buildDashboard(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-                color: AppColors.blue4,
-              ),
+          color: AppColors.blue4,
+        ),
         width: screenWidth,
         child: Column(
           children: [
@@ -28,14 +64,15 @@ class DashboardPage extends StatelessWidget {
             ),
             Center(
               child: Container(
-              width: screenWidth,
-              height: screenHeight * 0.75,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+                width: screenWidth,
+                height: screenHeight * 0.75,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-                color: Colors.white,
-              ),
+                    topRight: Radius.circular(20),
+                  ),
+                  color: Colors.white,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -58,7 +95,10 @@ class DashboardPage extends StatelessWidget {
                               color: AppColors.blue0,
                             ),
                             child: const Center(
-                              child: Text("Report Damages", style: TextStyle(color: Colors.white),),
+                              child: Text(
+                                "Report Damages",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
@@ -78,7 +118,10 @@ class DashboardPage extends StatelessWidget {
                               color: AppColors.blue0,
                             ),
                             child: const Center(
-                              child: Text("Damage History", style: TextStyle(color: Colors.white),),
+                              child: Text(
+                                "Damage History",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
@@ -104,7 +147,10 @@ class DashboardPage extends StatelessWidget {
                               color: AppColors.blue0,
                             ),
                             child: const Center(
-                              child: Text("My Profile",style: TextStyle(color: Colors.white),),
+                              child: Text(
+                                "My Profile",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),

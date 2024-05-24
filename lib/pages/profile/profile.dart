@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart'; // Import DateFormat
 
 void main() {
   runApp(const MyApp());
@@ -41,9 +42,12 @@ class ProfilePage extends StatelessWidget {
           }
 
           Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+          DateTime dob = (data['dob'] as Timestamp).toDate(); // Convert timestamp to DateTime
+          String formattedDOB = DateFormat.yMMMMd().format(dob); // Format DateTime to desired string representation
+
           return ListTile(
             title: Text('First Name: ${data['firstName']}, Last Name: ${data['lastName']}'),
-            subtitle: Text('Email: ${data['email']}\nDOB: ${data['dob']}'),
+            subtitle: Text('Email: ${data['email']}\nDOB: $formattedDOB'), // Use formatted date
           );
         },
       ),
