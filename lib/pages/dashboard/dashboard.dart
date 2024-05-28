@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fixaxi/pages/landing/landingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fixaxi/constants/colors.dart';
@@ -136,7 +137,7 @@ class DashboardPage extends StatelessWidget {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ProfilePage()),
+                              MaterialPageRoute(builder: (context) => ProfilePage()),
                             );
                           },
                           child: Container(
@@ -149,6 +150,26 @@ class DashboardPage extends StatelessWidget {
                             child: const Center(
                               child: Text(
                                 "My Profile",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 40,),
+                        GestureDetector(
+                          onTap: () {
+                            const landingPage();
+                          },
+                          child: Container(
+                            height: screenHeight * 0.22,
+                            width: screenHeight * 0.22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: AppColors.blue0,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Log Out",
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
