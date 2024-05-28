@@ -85,7 +85,7 @@ class DashboardPage extends StatelessWidget {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const DamageReport()),
+                              MaterialPageRoute(builder: (context) => DamageReport()),
                             );
                           },
                           child: Container(

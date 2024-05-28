@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/signUp':(context) => SignUpPage(),
         '/dashboard':(context) => const DashboardPage(),
         '/profile':(context) => ProfilePage(),
-        '/damagereport':(context) => const DamageReport(),
+        '/damagereport':(context) => DamageReport(),
         '/damagehistory':(context) => const DamageHistory(),
       },
     );
