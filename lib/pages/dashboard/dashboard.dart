@@ -158,7 +158,10 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(width: 40,),
                         GestureDetector(
                           onTap: () {
-                            const landingPage();
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const landingPage()),
+                            );
                           },
                           child: Container(
                             height: screenHeight * 0.22,

@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class DamageHistory extends StatelessWidget {
-  const DamageHistory({Key? key});
+  const DamageHistory({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,34 +40,50 @@ class DamageHistory extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 DocumentSnapshot document = snapshot.data!.docs[index];
                 Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                DateTime time = (data['time'] as Timestamp).toDate();
-                String formattedTime = DateFormat.yMMMMd().add_jm().format(time);
-                
-                List<dynamic> imageBase64Strings = data['images'];
+
+                DateTime? time;
+                String formattedTime;
+                try {
+                  time = (data['time'] as Timestamp?)?.toDate();
+                  formattedTime = time != null ? DateFormat.yMMMMd().add_jm().format(time) : 'No time data';
+                } catch (e) {
+                  formattedTime = 'No time data';
+                }
+
+                List<dynamic>? imageBase64Strings = data['images'] as List<dynamic>?;
+                String status = data['status'] ?? 'No status';
+                String damageType = data['damageType'] ?? 'No damage type';
+                String description = data['description'] ?? 'No description';
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: ListTile(
-                    title: Text(data['damageType']),
-                    subtitle: Text(data['description']),
+                    title: Text(damageType),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(description),
+                        Text('Status: $status'),
+                      ],
+                    ),
                     trailing: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(formattedTime),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Handle button press to display image
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ImageViewPage(
-                                  imageBase64Strings: imageBase64Strings,
+                        if (imageBase64Strings != null && imageBase64Strings.isNotEmpty)
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PhotoGridPage(images: imageBase64Strings),
                                 ),
-                              ),
-                            );
-                          },
-                          child: const Text('View Image'),
-                        ),
+                              );
+                            },
+                            child: const Text('View Photos'),
+                          )
+                        else
+                          const Text('No images available'),
                       ],
                     ),
                   ),
@@ -81,26 +97,53 @@ class DamageHistory extends StatelessWidget {
   }
 }
 
-class ImageViewPage extends StatelessWidget {
-  final List<dynamic> imageBase64Strings;
 
-  const ImageViewPage({Key? key, required this.imageBase64Strings}) : super(key: key);
+//DISPLAY PHOTOS PAGE HERE
+
+class PhotoGridPage extends StatelessWidget {
+  final List<dynamic> images;
+
+  const PhotoGridPage({Key? key, required this.images}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Image View'),
+        title: const Text('Photos'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: ListView.builder(
-        itemCount: imageBase64Strings.length,
+      body: GridView.builder(
+        itemCount: images.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 1.0,
+        ),
         itemBuilder: (context, index) {
-          String base64String = imageBase64Strings[index];
-          Uint8List bytes = base64Decode(base64String);
-          return Image.memory(
-            bytes,
-            fit: BoxFit.contain,
-          );
+          if (images[index] != null) {
+            try {
+              String base64String = images[index];
+              if (base64String.startsWith('data:image/jpeg;base64,')) {
+                base64String = base64String.substring('data:image/jpeg;base64,'.length);
+              }
+              Uint8List bytes = base64Decode(base64String);
+              return Image.memory(
+                bytes,
+                fit: BoxFit.contain,
+              );
+            } catch (e) {
+              print('Failed to decode image: $e');
+              return const Text('Invalid image data');
+            }
+          } else {
+            return const Text('No image');
+          }
         },
       ),
     );

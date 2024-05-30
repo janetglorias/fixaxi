@@ -14,8 +14,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController(); // New controller for phone number
+  final TextEditingController phoneNumberController = TextEditingController();
   late DateTime dob = DateTime.now();
+
+  int _currentPage = 0;
+  PageController _pageController = PageController();
 
   @override
   void dispose() {
@@ -23,7 +26,8 @@ class _SignUpPageState extends State<SignUpPage> {
     lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    phoneNumberController.dispose(); // Dispose the phone number controller
+    phoneNumberController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -33,113 +37,170 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
-                Color(0xFF4A90E2), // Example color
+                Color(0xFF4A90E2),
                 Colors.white,
               ],
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 150,
-            ),
-            child: Center(
-              child: Container(
-                width: screenWidth,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Welcome to Fixaxi",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          fontFamily: "Cupertino"),
+          child: Column(
+            children: [
+              const SizedBox(height: 100),
+              Expanded(
+                child: Center(
+                  child: Container(
+                    width: screenWidth,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20)),
+                      color: Colors.white,
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Please sign up with your credentials below",
-                    ),
-                    const SizedBox(height: 20),
-                    buildTextField("First Name", firstNameController),
-                    const SizedBox(height: 10),
-                    buildTextField("Last Name", lastNameController),
-                    const SizedBox(height: 10),
-                    buildDatePicker("Date of Birth"),
-                    const SizedBox(height: 10),
-                    buildTextField("Email", emailController),
-                    const SizedBox(height: 10),
-                    buildTextField("Phone Number", phoneNumberController), // New phone number field
-                    const SizedBox(height: 10),
-                    buildTextField("Password", passwordController, obscureText: true),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: GestureDetector(
-                        onTap: signUp,
-                        child: Container(
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color(0xFF2E86AB), // Example color
-                                Color(0xFF36D1DC), // Example color
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                     Row(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const SizedBox(height: 20), 
                         const Text(
-                          "Already a member?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          "Welcome to Fixaxi",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              fontFamily: "Cupertino"),
                         ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-          onTap: () {
-            Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
-            );
-          },
-          child: Text(
-            "Sign In Now",
-            style: TextStyle(
-          color: Colors.blue[300],
-          fontWeight: FontWeight.bold),
-          ),
-        )
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Please sign up with your credentials below",
+                        ),
+                        const SizedBox(height: 20),
+                        Expanded(
+                          child: PageView(
+                            controller: _pageController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              buildNamePage(),
+                              buildBirthdayPage(),
+                              buildEmailPhonePage(),
+                              buildPasswordPage(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10), 
+                        buildNextButton(),
+                        const SizedBox(height: 10), 
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Already a member?",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 10), 
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignInPage()),
+                                );
+                              },
+                              child: Text(
+                                "Sign In Now",
+                                style: TextStyle(
+                                    color: Colors.blue[300],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNamePage() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildTextField("First Name", firstNameController),
+          const SizedBox(height: 10),
+          buildTextField("Last Name", lastNameController),
+        ],
+      ),
+    );
+  }
+
+  Widget buildBirthdayPage() {
+    return Center(child: buildDatePicker("Date of Birth"));
+  }
+
+  Widget buildEmailPhonePage() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildTextField("Email", emailController),
+          const SizedBox(height: 10),
+          buildTextField("Phone Number", phoneNumberController),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPasswordPage() {
+    return Center(child: buildTextField("Password", passwordController, obscureText: true));
+  }
+
+  Widget buildNextButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: GestureDetector(
+        onTap: () {
+          if (_currentPage < 3) {
+            _pageController.nextPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+            );
+            setState(() {
+              _currentPage++;
+            });
+          } else {
+            signUp();
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xFF2E86AB),
+                Color(0xFF36D1DC),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Text(
+              _currentPage < 3 ? "Next" : "Complete Registration",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -147,7 +208,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget buildTextField(String hintText, TextEditingController controller, {bool obscureText = false}) {
+  Widget buildTextField(String hintText, TextEditingController controller,
+      {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Container(
@@ -206,8 +268,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   setState(() {});
                 },
                 child: Text(
-                  // ignore: unnecessary_null_comparison
-                  dob == null ? '' : dob.toIso8601String().substring(0, 10),
+                  dob.toIso8601String().substring(0, 10),
                 ),
               ),
             ),
@@ -223,9 +284,14 @@ class _SignUpPageState extends State<SignUpPage> {
     final String dobString = dob.toIso8601String().substring(0, 10);
     final String email = emailController.text.trim();
     final String password = passwordController.text.trim();
-    final String phoneNumber = phoneNumberController.text.trim(); // New phone number variable
+    final String phoneNumber = phoneNumberController.text.trim();
 
-    if (firstName.isEmpty || lastName.isEmpty || dobString.isEmpty || email.isEmpty || password.isEmpty || phoneNumber.isEmpty) { // Check if phone number field is empty
+    if (firstName.isEmpty ||
+        lastName.isEmpty ||
+        dobString.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        phoneNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Please fill all fields"),
       ));
@@ -233,17 +299,21 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .set({
         'firstName': firstName,
         'lastName': lastName,
         'dob': dob,
         'email': email,
-        'phoneNumber': phoneNumber, // Add phone number to Firestore
+        'phoneNumber': phoneNumber,
       });
 
       if (!mounted) return;
