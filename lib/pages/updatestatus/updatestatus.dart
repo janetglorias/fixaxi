@@ -1,39 +1,27 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class DamageHistory extends StatelessWidget {
-  const DamageHistory({Key? key}) : super(key: key);
+class UpdateStatus extends StatelessWidget {
+  const UpdateStatus({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final User? user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      return const Center(
-        child: Text('Please sign in to view damage history'),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Damage History'),
+        title: const Text('Update Status'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('reports')
-            .where('userId', isEqualTo: user.uid)
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('reports').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No damage reports found'));
+            return const Center(child: Text('No reports found'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -54,7 +42,12 @@ class DamageHistory extends StatelessWidget {
                 String status = data['status'] ?? 'No status';
                 String damageType = data['damageType'] ?? 'No damage type';
                 String description = data['description'] ?? 'No description';
-                String taxiId = data['taxiId'] ?? 'No description';
+                String taxiId = data['taxiId'] ?? 'No taxi ID';
+
+                List<String> statusOptions = ['Posted', 'In Review', 'Approved', 'Rejected', 'Processed', 'Under Maintenance', 'Ready for Collection'];
+                if (!statusOptions.contains(status)) {
+                  status = statusOptions[0]; // Set to the first option as default
+                }
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -63,9 +56,26 @@ class DamageHistory extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(taxiId),
+                        Text('Taxi ID: $taxiId'),
                         Text(description),
                         Text('Status: $status'),
+                        DropdownButton<String>(
+                          value: status,
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              FirebaseFirestore.instance
+                                  .collection('reports')
+                                  .doc(document.id)
+                                  .update({'status': newValue});
+                            }
+                          },
+                          items: statusOptions.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
                       ],
                     ),
                     trailing: Column(
@@ -98,9 +108,6 @@ class DamageHistory extends StatelessWidget {
     );
   }
 }
-
-
-//DISPLAY PHOTOS PAGE HERE
 
 class PhotoGridPage extends StatelessWidget {
   final List<dynamic> images;

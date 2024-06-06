@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart'; // Import this for FilteringTextInputFormatter
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late DateTime dob = DateTime.now();
 
   int _currentPage = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   void dispose() {
@@ -33,7 +34,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -50,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           child: Column(
             children: [
-              const SizedBox(height: 100),
+              SizedBox(height: (screenHeight * 0.40) ),
               Expanded(
                 child: Center(
                   child: Container(
@@ -64,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 20), 
+                        const SizedBox(height: 20),
                         const Text(
                           "Welcome to Fixaxi",
                           style: TextStyle(
@@ -89,9 +92,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10), 
+                        const SizedBox(height: 10),
+                        if (_currentPage > 0) buildBackButton(),
                         buildNextButton(),
-                        const SizedBox(height: 10), 
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -99,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               "Already a member?",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(width: 10), 
+                            const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -154,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
         children: [
           buildTextField("Email", emailController),
           const SizedBox(height: 10),
-          buildTextField("Phone Number", phoneNumberController),
+          buildTextField("Phone Number", phoneNumberController, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
         ],
       ),
     );
@@ -208,8 +212,45 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  Widget buildBackButton() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+      child: GestureDetector(
+        onTap: () {
+          if (_currentPage > 0) {
+            _pageController.previousPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+            );
+            setState(() {
+              _currentPage--;
+            });
+          } else {
+            Navigator.pop(context);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Center(
+            child: Text(
+              "Back",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildTextField(String hintText, TextEditingController controller,
-      {bool obscureText = false}) {
+      {bool obscureText = false, List<TextInputFormatter>? inputFormatters}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Container(
@@ -223,6 +264,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: TextField(
             controller: controller,
             obscureText: obscureText,
+            inputFormatters: inputFormatters,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: hintText,

@@ -344,33 +344,6 @@ Future<String> _readImageData(XFile file) async {
     }
   }
 
-  //   Future<void> submitReport() async {
-  //     final String taxiId = taxiIdController.text;
-  //     final String description = descriptionController.text;
-  //     final String userId =
-  //       FirebaseAuth.instance.currentUser!.uid;
-  //     final List<String> imageUrls = [];
-
-  //     for (final image in images) {
-  //       final bytes = await image.readAsBytes();
-  //       final compressedBytes = await compressImage(bytes);
-  //       final base64Image = base64Encode(compressedBytes);
-  //       imageUrls.add('data:image/jpeg;base64,$base64Image');
-  //     }
-
-  //     final report = {
-  //       'taxiId': taxiId,
-  //       'description': description,
-  //       'damageType': damageType,
-  //       'time': time,
-  //       'userId': userId,
-  //       'images': imageUrls,
-  //     };
-
-  //     await FirebaseFirestore.instance.collection('reports').add(report);
-  //   }
-  // }
-
 Future<void> submitReport() async {
   try {
     final String taxiId = taxiIdController.text;
@@ -392,6 +365,7 @@ Future<void> submitReport() async {
       'time': time,
       'userId': userId,
       'images': imageUrls,
+      'status': 'Posted', // Add this line
     };
 
     await FirebaseFirestore.instance.collection('reports').add(report);
@@ -411,4 +385,5 @@ Future<void> submitReport() async {
     );
   }
 }
+
 }
